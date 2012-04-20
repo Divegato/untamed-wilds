@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 11
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UntamedWilds.Server", "UntamedWilds.Server\UntamedWilds.Server.csproj", "{B0BC7513-2B95-4B80-B4AE-4969FEE8DDF2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UntamedWilds.ConsoleClient", "UntamedWilds.ConsoleClient\UntamedWilds.ConsoleClient.csproj", "{89B27087-1A02-40D9-96A5-0CF8E3A75428}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UntamedWilds.FormsClient", "UntamedWilds.FormsClient\UntamedWilds.FormsClient.csproj", "{2D248D59-8070-4FBF-8FEC-4CB068BA9CE1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2D248D59-8070-4FBF-8FEC-4CB068BA9CE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D248D59-8070-4FBF-8FEC-4CB068BA9CE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D248D59-8070-4FBF-8FEC-4CB068BA9CE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D248D59-8070-4FBF-8FEC-4CB068BA9CE1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89B27087-1A02-40D9-96A5-0CF8E3A75428}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89B27087-1A02-40D9-96A5-0CF8E3A75428}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89B27087-1A02-40D9-96A5-0CF8E3A75428}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89B27087-1A02-40D9-96A5-0CF8E3A75428}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0BC7513-2B95-4B80-B4AE-4969FEE8DDF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0BC7513-2B95-4B80-B4AE-4969FEE8DDF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0BC7513-2B95-4B80-B4AE-4969FEE8DDF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0BC7513-2B95-4B80-B4AE-4969FEE8DDF2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
