@@ -9,13 +9,35 @@ namespace UntamedWilds.ConsoleClient
 {
     public static class Program
     {
-        private static Game Game;
+        private static IGame Game;
 
         static void Main(string[] args)
         {
             Game = new Game();
-            RenderMenu(Game.GetCurrentMenu());
+            MainMenu();
+        }
 
+        private static void MainMenu()
+        {
+            Console.Clear();
+            Console.WriteLine("1: Start Game");
+            Console.WriteLine("2: Quit");
+            string input = Console.ReadLine();
+            switch (input)
+            {
+                case "1":
+                    Game.New();
+                    break;
+                case "2":
+                    return;
+                default:
+                    MainMenu();
+                    break;
+            }            
+        }
+
+        private static void MainLoop()
+        {
             do
             {
                 Render();
@@ -26,17 +48,8 @@ namespace UntamedWilds.ConsoleClient
         private static void Render()
         {
             Console.Clear();
-            RenderMenu(Game.GetCurrentMenu());
         }
-
-        private static void RenderMenu(Menu menu)
-        {
-            foreach (Menu.Option option in menu.Options)
-            {
-                Console.WriteLine(string.Format("{0}: {1}", option.Value, option.Text));
-            }
-        }
-
+        
         private static bool ExecuteCommand(string command)
         {
             try
@@ -47,7 +60,6 @@ namespace UntamedWilds.ConsoleClient
 
                     if (int.TryParse(command, out number))
                     {
-                        Game.ExecuteCommand(number);
                     }
                     else
                     {

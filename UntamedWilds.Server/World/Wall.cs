@@ -5,8 +5,7 @@ using System.Text;
 
 namespace UntamedWilds.Server
 {
-    public class Settlement
+    public class Wall
     {
-
     }
 }

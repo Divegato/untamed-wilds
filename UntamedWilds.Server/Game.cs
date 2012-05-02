@@ -2,15 +2,15 @@
 
 namespace UntamedWilds.Server
 {
-    public class Game
+    public class Game : IGame
     {
         public Game()
         {
             this.CurrentState = State.MainMenu;
         }
 
-        public State CurrentState { get; set; }
-        public World World { get; set; }
+        public State CurrentState { get; private set; }
+        public World World { get; private set; }
 
         public Menu GetCurrentMenu()
         {
@@ -38,25 +38,29 @@ namespace UntamedWilds.Server
                 {
                     case 1:
                         this.World = new World();
-                        this.World.Civilization = new Civilization();
-                        this.World.Civilization.Settlement = new Settlement();
                         break;
                     case 2:
-                        this.World.Civilization = new Civilization();
-                        this.World.Civilization.Settlement = new Settlement();
+                        this.World.ActiveCivilization = new Civilization();
                         break;
                     case 3:
-                        this.World.Civilization.Settlement = new Settlement();
+                        this.World.ActiveCivilization.Settlement = new Settlement();
                         break;
                     default:
                         throw new InvalidCommandException();
                 }
+
+
             }
         }
-        
+
         public enum State
         {
             MainMenu
+        }
+
+        public void New()
+        {
+            this.World = new World();
         }
     }
 }

@@ -33,7 +33,6 @@ namespace UntamedWilds.FormsClient
 
         public void menuItem_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
         }
 
         private void FormClient_Load(object sender, EventArgs e)
