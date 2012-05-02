@@ -11,21 +11,26 @@ namespace UntamedWilds.Server
     ///     Option A: Same - Remove Ceiling, West Wall and South Wall.  Reference neighboring tile.
     ///     Option B: Different - When modifying a tile, generally have to modify two tiles.
     ///     *Option C: Handle walls, ceilings and floors as objects on the tile
+    ///     
+    /// Possible future properties
+    /// pressure
+    /// temperature
+    /// weight
+    /// integrity (structural)
     /// </summary>
     public class Tile
     {
         public Tile()
         {
-            Fill = new Solid();
+            this.Fill = new Gas();
+        }
+        public Tile(Material fill)
+            : this()
+        {
+            this.Fill = fill;
         }
 
-        //public Wall Ceiling { get; set; }
-        //public Wall NorthWall { get; set; }
-        //public Wall WestWall { get; set; }
-        //public Wall EastWall { get; set; }
-        //public Wall SouthWall { get; set; }
-        //public Wall Floor { get; set; }
-
+        public bool Visible { get; set; }
         public Material Fill { get; set; }
     }
 }

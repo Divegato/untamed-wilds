@@ -9,5 +9,6 @@ namespace UntamedWilds.Server
     public interface IGame
     {
         void New();
+        World GetWorld();
     }
 }

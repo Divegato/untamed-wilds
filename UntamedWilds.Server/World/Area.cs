@@ -7,24 +7,49 @@ namespace UntamedWilds.Server
 {
     public class Area
     {
-        private const int AREA_SIZE = 10;
+        public const int SIZE = 10;
 
-        public Area()
+        public Area(Coordinate offset)
         {
-            Tiles = new Tile[AREA_SIZE, AREA_SIZE, AREA_SIZE];
+            Random r = new Random(DateTime.Now.Millisecond);
+            this.Offset = offset;
 
-            for (int i = 0; i < AREA_SIZE; i++)
+            this.Tiles = new Tile[SIZE, SIZE, SIZE];
+
+            for (int x = 0; x < SIZE; x++)
             {
-                for (int j = 0; j < AREA_SIZE; j++)
+                for (int y = 0; y < SIZE; y++)
                 {
-                    for (int k = 0; k < AREA_SIZE; k++)
+                    for (int z = 0; z < SIZE; z++)
                     {
-                        Tiles[i, j, k] = new Tile();
+                        Material fill;
+
+                        int i = r.Next(3);
+                        switch (i)
+                        {
+                            case 1:
+                                fill = new Solid();
+                                break;
+                            case 2:
+                                fill = new Liquid();
+                                break;
+                            default :
+                                fill = new Gas();
+                                break;
+                        }
+
+                        this.Tiles[x, y, z] = new Tile(fill);
                     }
                 }
             }
         }
 
+        public Coordinate Offset { get; set; }
         public Tile[, ,] Tiles { get; set; }
+
+        public override string ToString()
+        {
+            return string.Format("Area: {0}³ Tiles at {1}", SIZE, this.Offset);
+        }
     }
 }

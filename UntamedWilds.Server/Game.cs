@@ -62,5 +62,10 @@ namespace UntamedWilds.Server
         {
             this.World = new World();
         }
+
+        public World GetWorld()
+        {
+            return this.World;
+        }
     }
 }

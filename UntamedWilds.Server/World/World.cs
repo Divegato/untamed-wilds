@@ -11,20 +11,38 @@ namespace UntamedWilds.Server
     /// </summary>
     public class World
     {
-        private const int SEA_LEVEL = 0;  // Equal to radius of planet if cube structure is used
-        private const int Dimensions = 1; // Goal to make spherical worlds eventually (perhaps donut shaped)
+        public const int SEA_LEVEL = 5;
+        public const int DIAMETER = 10;
 
         public World()
         {
-            // For now, the world will be a single area
-            Areas = new Area[Dimensions, Dimensions, Dimensions];
-            Areas[0, 0, 0] = new Area();
+            Origin = new Coordinate(DIAMETER / 2, DIAMETER / 2, DIAMETER / 2);
+            Areas = new Area[DIAMETER, DIAMETER, DIAMETER];
+
+            for (int x = 0; x < DIAMETER; x++)
+            {
+                for (int y = 0; y < DIAMETER; y++)
+                {
+                    for (int z = 0; z < DIAMETER; z++)
+                    {
+                        // Create the area and pass the offset from the origin
+                        Areas[x, y, z] = new Area(new Coordinate(x - Origin.X, y - Origin.Y, z - Origin.Y));
+                    }
+                }
+            }
+
             ActiveCivilization = new Civilization();
             AICivilizations = new List<Civilization>();
         }
 
-        public Area[,,] Areas { get; set; }
+        public Coordinate Origin { get; set; } // Possibly could represent the center of gravity.  Optionally use a second coordinate
+        public Area[, ,] Areas { get; set; }
         public Civilization ActiveCivilization { get; set; }
         public List<Civilization> AICivilizations { get; set; }
+
+        public override string ToString()
+        {
+            return string.Format("World: {0}³ Areas", DIAMETER);
+        }
     }
 }

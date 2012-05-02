@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="World\Coordinate.cs" />
     <Compile Include="IGame.cs" />
     <Compile Include="Menu.cs" />
     <Compile Include="World\Area.cs" />
