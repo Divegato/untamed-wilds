@@ -11,11 +11,14 @@ namespace UntamedWilds.Server
 
         public Area(Coordinate offset)
         {
-            Random r = new Random(DateTime.Now.Millisecond);
             this.Offset = offset;
-
             this.Tiles = new Tile[SIZE, SIZE, SIZE];
+        }
 
+        public void Generate()
+        {
+            Random r = new Random(DateTime.Now.Millisecond);
+            
             for (int x = 0; x < SIZE; x++)
             {
                 for (int y = 0; y < SIZE; y++)
@@ -29,11 +32,13 @@ namespace UntamedWilds.Server
                         {
                             case 1:
                                 fill = new Solid();
+                                Mass++;
                                 break;
                             case 2:
                                 fill = new Liquid();
+                                Mass++;
                                 break;
-                            default :
+                            default:
                                 fill = new Gas();
                                 break;
                         }
@@ -47,9 +52,26 @@ namespace UntamedWilds.Server
         public Coordinate Offset { get; set; }
         public Tile[, ,] Tiles { get; set; }
 
+        private double mass;
+        public double Mass
+        {
+            get { return mass; }
+            set
+            {
+                if (value != mass && MassChanged != null)
+                    MassChanged(value - mass);
+
+                mass = value;
+            }
+        }
+        
         public override string ToString()
         {
             return string.Format("Area: {0}³ Tiles at {1}", SIZE, this.Offset);
         }
+
+        public event DoubleValueChangedEventHandler MassChanged;
     }
+
+    public delegate void DoubleValueChangedEventHandler(double change);
 }

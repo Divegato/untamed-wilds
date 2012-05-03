@@ -27,6 +27,8 @@ namespace UntamedWilds.Server
                     {
                         // Create the area and pass the offset from the origin
                         Areas[x, y, z] = new Area(new Coordinate(x - Origin.X, y - Origin.Y, z - Origin.Y));
+                        Areas[x, y, z].MassChanged += new DoubleValueChangedEventHandler(OnMassChanged);
+                        Areas[x, y, z].Generate();
                     }
                 }
             }
@@ -39,6 +41,12 @@ namespace UntamedWilds.Server
         public Area[, ,] Areas { get; set; }
         public Civilization ActiveCivilization { get; set; }
         public List<Civilization> AICivilizations { get; set; }
+        public double Mass { get; private set; }
+
+        private void OnMassChanged(double change)
+        {
+            this.Mass += change;
+        }
 
         public override string ToString()
         {

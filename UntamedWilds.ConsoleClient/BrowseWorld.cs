@@ -12,15 +12,14 @@ namespace UntamedWilds.ConsoleClient
         public BrowseWorld(World world)
         {
             this.GameWorld = world;
+            this.View = new Camera(GameWorld.Origin);
         }
 
         public World GameWorld { get; set; }
-        public Coordinate CameraLocation { get; set; }
+        public Camera View { get; set; }
 
         internal void Browse()
         {
-            this.CameraLocation = new Coordinate(GameWorld.Origin);
-
             do
             {
                 Render();
@@ -38,7 +37,7 @@ namespace UntamedWilds.ConsoleClient
             {
                 for (int y = 0; y < Area.SIZE; y++)
                 {
-                    Console.Write(RenderTile( currentArea.Tiles[x, y, 0]));
+                    Console.Write(RenderTile(currentArea.Tiles[x, y, 0]));
                 }
                 Console.WriteLine();
             }
@@ -70,7 +69,7 @@ namespace UntamedWilds.ConsoleClient
             }
         }
 
-        private static bool ExecuteCommand(string command)
+        private bool ExecuteCommand(string command)
         {
             try
             {
@@ -80,6 +79,50 @@ namespace UntamedWilds.ConsoleClient
 
                     if (int.TryParse(command, out number))
                     {
+                    }
+                    else if (command.Length == 1)
+                    {
+                        switch (command.ToArray()[0])
+                        {
+                            case '+':
+                                View.Move(Direction.Up);
+                                break;
+                            case '-':
+                                View.Move(Direction.Down);
+                                break;
+                            case 'w':
+                                View.Move(Direction.Forward);
+                                break;
+                            case 'a':
+                                View.Move(Direction.Left);
+                                break;
+                            case 's':
+                                View.Move(Direction.Backward);
+                                break;
+                            case 'd':
+                                View.Move(Direction.Right);
+                                break;
+                            case 'q':
+                                View.Rotate(Rotation.CounterClockwise);
+                                break;
+                            case 'e':
+                                View.Rotate(Rotation.Clockwise);
+                                break;
+                            case 'W':
+                                View.Rotate(Rotation.Down);
+                                break;
+                            case 'A':
+                                View.Rotate(Rotation.Right);
+                                break;
+                            case 'S':
+                                View.Rotate(Rotation.Up);
+                                break;
+                            case 'D':
+                                View.Rotate(Rotation.Left);
+                                break;
+                            default:
+                                break;
+                        }
                     }
                     else
                     {
