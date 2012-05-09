@@ -2,6 +2,8 @@
 {
     public class Coordinate
     {
+        public Coordinate()
+            : this(0, 0, 0) { }
         public Coordinate(int x, int y, int z)
         {
             this.X = x;
@@ -9,9 +11,7 @@
             this.Z = z;
         }
         public Coordinate(Coordinate coordinate)
-            : this(coordinate.X, coordinate.Y, coordinate.Z)
-        {
-        }
+            : this(coordinate.X, coordinate.Y, coordinate.Z) { }
 
         public int X { get; set; }
         public int Y { get; set; }

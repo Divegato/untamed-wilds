@@ -15,7 +15,7 @@ namespace UntamedWilds.ConsoleClient
             Console.WriteLine("1: Start Game");
             Console.WriteLine("2: Quit");
 
-            string input = Console.ReadLine();
+            string input = "1";//Console.ReadLine();
 
             switch (input)
             {

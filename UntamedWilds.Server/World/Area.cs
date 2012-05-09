@@ -64,7 +64,7 @@ namespace UntamedWilds.Server
                 mass = value;
             }
         }
-        
+
         public override string ToString()
         {
             return string.Format("Area: {0}³ Tiles at {1}", SIZE, this.Offset);
