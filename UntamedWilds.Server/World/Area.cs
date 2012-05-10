@@ -7,40 +7,38 @@ namespace UntamedWilds.Server
 {
     public class Area
     {
-        public const int SIZE = 10;
+        public const int SIZE = 100;
 
         public Area(Coordinate offset)
         {
             this.Offset = offset;
-            this.Tiles = new Tile[SIZE, SIZE, SIZE];
         }
 
-        public void Generate()
+        private bool initialized;
+
+        private void Generate()
         {
             Random r = new Random(DateTime.Now.Millisecond);
-            
+            this.Tiles = new Tile[SIZE, SIZE, SIZE];
+            this.Mass = 0;
             for (int x = 0; x < SIZE; x++)
             {
                 for (int y = 0; y < SIZE; y++)
                 {
                     for (int z = 0; z < SIZE; z++)
                     {
-                        Material fill;
+                        double xDistance = Math.Pow((this.Offset.X * SIZE) + x, 2);
+                        double yDistance = Math.Pow((this.Offset.Y * SIZE) + y, 2);
+                        double zDistance = Math.Pow((this.Offset.Z * SIZE) + z, 2);
+                        double totalDistance = Math.Pow(xDistance + yDistance + zDistance, 0.5);
+                        double seaLevel = World.SEA_LEVEL * SIZE;
 
-                        int i = r.Next(3);
-                        switch (i)
+                        Material fill = new Gas();
+
+                        if (totalDistance < seaLevel)
                         {
-                            case 1:
-                                fill = new Solid();
-                                Mass++;
-                                break;
-                            case 2:
-                                fill = new Liquid();
-                                Mass++;
-                                break;
-                            default:
-                                fill = new Gas();
-                                break;
+                            fill = new Solid();
+                            Mass++;
                         }
 
                         this.Tiles[x, y, z] = new Tile(fill);
@@ -50,7 +48,18 @@ namespace UntamedWilds.Server
         }
 
         public Coordinate Offset { get; set; }
-        public Tile[, ,] Tiles { get; set; }
+
+        private Tile[, ,] Tiles;
+        public Tile GetTile(int x, int y, int z)
+        {
+            if (!initialized)
+            {
+                this.Generate();
+                this.initialized = true;
+            }
+
+            return this.Tiles[z, y, z];
+        }
 
         private double mass;
         public double Mass

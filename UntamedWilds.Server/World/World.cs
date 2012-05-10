@@ -11,8 +11,8 @@ namespace UntamedWilds.Server
     /// </summary>
     public class World
     {
-        public const int SEA_LEVEL = 5;
-        public const int DIAMETER = 10;
+        public const int SEA_LEVEL = 75;
+        public const int DIAMETER = 200;
 
         public World()
         {
@@ -28,7 +28,7 @@ namespace UntamedWilds.Server
                         // Create the area and pass the offset from the origin
                         Areas[x, y, z] = new Area(new Coordinate(x - Origin.X, y - Origin.Y, z - Origin.Y));
                         Areas[x, y, z].MassChanged += new DoubleValueChangedEventHandler(OnMassChanged);
-                        Areas[x, y, z].Generate();
+                        //Areas[x, y, z].Generate();
                     }
                 }
             }

@@ -12,8 +12,8 @@ namespace UntamedWilds.ConsoleClient
         public Camera(Coordinate location)
         {
             this.Location = location;
-            this.HorizontalAxis = new ViewAxis() { Start = 0, End = 9, Scale = 1, Type = AxisTypes.X };
-            this.VerticalAxis = new ViewAxis() { Start = 0, End = 9, Scale = 1, Type = AxisTypes.Y };
+            this.HorizontalAxis = new ViewAxis() { Start = 0, End = 70, Scale = 1, Type = AxisTypes.X };
+            this.VerticalAxis = new ViewAxis() { Start = 0, End = 30, Scale = 1, Type = AxisTypes.Y };
             this.DepthAxis = new ViewAxis() { Start = 0, End = 0, Scale = 1, Type = AxisTypes.Z };
         }
 

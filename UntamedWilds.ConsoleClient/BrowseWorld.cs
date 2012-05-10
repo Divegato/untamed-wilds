@@ -1,22 +1,40 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using UntamedWilds.Server;
 
 namespace UntamedWilds.ConsoleClient
 {
     internal class BrowseWorld
     {
-        public BrowseWorld(World world)
+        internal BrowseWorld(World world)
         {
             this.GameWorld = world;
             this.View = new Camera(GameWorld.Origin);
         }
 
-        public World GameWorld { get; set; }
-        public Camera View { get; set; }
+        private World GameWorld { get; set; }
+        private Camera View { get; set; }
+
+        private int X { get; set; }
+        private int Y { get; set; }
+        private int Z { get; set; }
+
+        private int Depth
+        {
+            get { return GetCoordinate(this.View.DepthAxis.Type); }
+            set { SetCoordinate(this.View.DepthAxis.Type, value); }
+        }
+        private int Vertical
+        {
+            get { return GetCoordinate(this.View.VerticalAxis.Type); }
+            set { SetCoordinate(this.View.VerticalAxis.Type, value); }
+        }
+        private int Horizontal
+        {
+            get { return GetCoordinate(this.View.HorizontalAxis.Type); }
+            set { SetCoordinate(this.View.HorizontalAxis.Type, value); }
+        }
 
         internal void Browse()
         {
@@ -27,113 +45,40 @@ namespace UntamedWilds.ConsoleClient
             while (ExecuteCommand(Console.ReadKey()));
         }
 
-
-        private int X { get; set; }
-        private int Y { get; set; }
-        private int Z { get; set; }
-        private int Depth
+        private int GetCoordinate(AxisTypes axis)
         {
-            get
+            switch (axis)
             {
-                switch (this.View.DepthAxis.Type)
-                {
-                    case AxisTypes.X:
-                        return X;
-                    case AxisTypes.Y:
-                        return Y;
-                    case AxisTypes.Z:
-                        return Z;
-                    default:
-                        return 0;
-                }
-            }
-            set
-            {
-                switch (this.View.DepthAxis.Type)
-                {
-                    case AxisTypes.X:
-                        this.X = value;
-                        break;
-                    case AxisTypes.Y:
-                        this.Y = value;
-                        break;
-                    case AxisTypes.Z:
-                        this.Z = value;
-                        break;
-                }
+                case AxisTypes.X:
+                    return X;
+                case AxisTypes.Y:
+                    return Y;
+                case AxisTypes.Z:
+                    return Z;
+                default:
+                    throw new Exception(axis.ToString() + " is not a valid axis type.");
             }
         }
-        private int Vertical
+        private void SetCoordinate(AxisTypes axis, int value)
         {
-            get
+            switch (axis)
             {
-                switch (this.View.VerticalAxis.Type)
-                {
-                    case AxisTypes.X:
-                        return X;
-                    case AxisTypes.Y:
-                        return Y;
-                    case AxisTypes.Z:
-                        return Z;
-                    default:
-                        return 0;
-                }
-            }
-            set
-            {
-                switch (this.View.VerticalAxis.Type)
-                {
-                    case AxisTypes.X:
-                        this.X = value;
-                        break;
-                    case AxisTypes.Y:
-                        this.Y = value;
-                        break;
-                    case AxisTypes.Z:
-                        this.Z = value;
-                        break;
-                }
-            }
-        }
-        private int Horizontal
-        {
-            get
-            {
-                switch (this.View.HorizontalAxis.Type)
-                {
-                    case AxisTypes.X:
-                        return X;
-                    case AxisTypes.Y:
-                        return Y;
-                    case AxisTypes.Z:
-                        return Z;
-                    default:
-                        return 0;
-                }
-            }
-            set
-            {
-                switch (this.View.HorizontalAxis.Type)
-                {
-                    case AxisTypes.X:
-                        this.X = value;
-                        break;
-                    case AxisTypes.Y:
-                        this.Y = value;
-                        break;
-                    case AxisTypes.Z:
-                        this.Z = value;
-                        break;
-                }
+                case AxisTypes.X:
+                    this.X = value;
+                    break;
+                case AxisTypes.Y:
+                    this.Y = value;
+                    break;
+                case AxisTypes.Z:
+                    this.Z = value;
+                    break;
             }
         }
 
         private void Render()
         {
             // Assume camera vector is -z, orientation is top y
-            Console.Clear();
-
-            Area currentArea = GetCurrentArea();
+            StringBuilder sb = new StringBuilder();
 
             for (this.Depth = this.View.DepthAxis.Start; Between(this.View.DepthAxis.Start, this.View.DepthAxis.End, this.Depth); this.Depth += this.View.DepthAxis.Scale)
             {
@@ -141,39 +86,85 @@ namespace UntamedWilds.ConsoleClient
                 {
                     for (this.Horizontal = this.View.HorizontalAxis.Start; Between(this.View.HorizontalAxis.Start, this.View.HorizontalAxis.End, this.Horizontal); this.Horizontal += this.View.HorizontalAxis.Scale)
                     {
-                        PrintTile(currentArea, this.X, this.Y, this.Z);
+                        sb.Append(RenderTile(this.X, this.Y, this.Z));
                     }
-                    Console.WriteLine();
+                    sb.AppendLine();
                 }
             }
+
+            Console.Clear();
+            Console.Write(sb.ToString());
         }
 
-        private void PrintTile(Area currentArea, int x, int y, int z)
+        private char RenderTile(int x, int y, int z)
         {
+            int xArea = World.DIAMETER / 2;
+            int yArea = World.DIAMETER / 2;
+            int zArea = (World.DIAMETER / 2) - World.SEA_LEVEL;
+
             try
             {
-                if (
-                    ((currentArea.Tiles.GetLowerBound(0) <= x) && (x <= currentArea.Tiles.GetUpperBound(0))) &&
-                    ((currentArea.Tiles.GetLowerBound(1) <= y) && (y <= currentArea.Tiles.GetUpperBound(1))) &&
-                    ((currentArea.Tiles.GetLowerBound(2) <= z) && (z <= currentArea.Tiles.GetUpperBound(2))))
+                Area currentArea = GameWorld.Areas[xArea, yArea, zArea];
+
+                bool outOfRange = true;
+
+                while (outOfRange)
                 {
-                    Console.Write(RenderTile(currentArea.Tiles[x, y, z]));
+                    outOfRange = false;
+                    if (x < 0)
+                    {
+                        xArea--;
+                        x += Area.SIZE;
+                        outOfRange = true;
+                    }
+                    if (x >= Area.SIZE)
+                    {
+                        xArea++;
+                        x -= Area.SIZE;
+                        outOfRange = true;
+                    }
+                    if (y < 0)
+                    {
+                        yArea--;
+                        y += Area.SIZE;
+                        outOfRange = true;
+                    }
+                    if (y >= Area.SIZE)
+                    {
+                        yArea++;
+                        y -= Area.SIZE;
+                        outOfRange = true;
+                    }
+                    if (z < 0)
+                    {
+                        zArea--;
+                        z += Area.SIZE;
+                        outOfRange = true;
+                    }
+                    if (z >= Area.SIZE)
+                    {
+                        zArea++;
+                        z -= Area.SIZE;
+                        outOfRange = true;
+                    }
+                }
+
+                if (
+                    ((GameWorld.Areas.GetLowerBound(0) <= xArea) && (xArea <= GameWorld.Areas.GetUpperBound(0))) &&
+                    ((GameWorld.Areas.GetLowerBound(1) <= yArea) && (yArea <= GameWorld.Areas.GetUpperBound(1))) &&
+                    ((GameWorld.Areas.GetLowerBound(2) <= zArea) && (zArea <= GameWorld.Areas.GetUpperBound(2))))
+                {
+                    return RenderTile(GameWorld.Areas[xArea, yArea, zArea].GetTile(x, y, z));
                 }
                 else
                 {
-                    Console.Write(' ');
+                    return ' ';
                 }
             }
             catch
             {
-                Console.Write(' ');
+                return ' ';
             }
-        }
-
-        private Area GetCurrentArea()
-        {
-            // For starters, lets just grab the first area
-            return GameWorld.Areas[0, 0, 0];
         }
 
         private char RenderTile(Tile tile)
@@ -245,79 +236,6 @@ namespace UntamedWilds.ConsoleClient
             }
 
             return true;
-        }
-
-        private bool ExecuteCommand(string command)
-        {
-            try
-            {
-                if (!string.IsNullOrWhiteSpace(command))
-                {
-                    int number = 0;
-
-                    if (int.TryParse(command, out number))
-                    {
-                    }
-                    else if (command.Length == 1)
-                    {
-                        switch (command.ToArray()[0])
-                        {
-                            case '+':
-                                View.Move(Direction.Forward);
-                                break;
-                            case '-':
-                                View.Move(Direction.Backward);
-                                break;
-                            case 'w':
-                                View.Move(Direction.Up);
-                                break;
-                            case 'a':
-                                View.Move(Direction.Left);
-                                break;
-                            case 's':
-                                View.Move(Direction.Down);
-                                break;
-                            case 'd':
-                                View.Move(Direction.Right);
-                                break;
-                            case 'q':
-                                View.Rotate(Rotation.CounterClockwise);
-                                break;
-                            case 'e':
-                                View.Rotate(Rotation.Clockwise);
-                                break;
-                            case 'W':
-                                View.Rotate(Rotation.Down);
-                                break;
-                            case 'A':
-                                View.Rotate(Rotation.Right);
-                                break;
-                            case 'S':
-                                View.Rotate(Rotation.Up);
-                                break;
-                            case 'D':
-                                View.Rotate(Rotation.Left);
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                    else
-                    {
-
-                    }
-                }
-            }
-            catch (InvalidCommandException) { }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                Console.WriteLine("Press enter to quit");
-                Console.ReadLine();
-                command = "quit";
-            }
-
-            return command != "quit";
         }
 
         private bool Between(int p1, int p2, int value)
